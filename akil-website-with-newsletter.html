@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akil Health - Removing Healthcare Barriers Through AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --akil-navy: #0F172A;
+            --akil-blue: #1E40AF;
+            --akil-accent: #3B82F6;
+            --akil-gold: #F59E0B;
+            --akil-silver: #E5E7EB;
+            --akil-dark: #1E293B;
+            --akil-gray: #64748B;
+            --akil-light: #F8FAFC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #334155 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Premium Background Effects - NO ANIMATIONS */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: #E5E7EB;
+            letter-spacing: -0.02em;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #94A3B8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #3B82F6;
+        }
+
+        /* Newsletter Badge for Navigation */
+        .nav-links .newsletter-link {
+            position: relative;
+        }
+
+        .nav-links .newsletter-link::after {
+            content: "NEW";
+            position: absolute;
+            top: -8px;
+            right: -20px;
+            background: linear-gradient(135deg, #F59E0B, #DC2626);
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 8px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding: 120px 0 80px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+
+        .hero-content {
+            z-index: 2;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(245, 158, 11, 0.2));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #3B82F6;
+            margin-bottom: 32px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #94A3B8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        .hero-subtitle {
+            font-size: 1.375rem;
+            color: #94A3B8;
+            margin-bottom: 40px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .hero-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Healthcare Tech Visualization */
+        .tech-visual {
+            position: relative;
+            padding: 40px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.8));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-mockup {
+            background: rgba(248, 250, 252, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            color: #1e293b;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .dashboard-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #059669;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 4px;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .activity-feed {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .activity-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .activity-icon {
+            width: 6px;
+            height: 6px;
+            background: #f59e0b;
+            border-radius: 50%;
+        }
+
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3B82F6, #1E40AF);
+            color: white;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+            border: 1px solid rgba(59, 130, 246, 0.5);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(15, 23, 42, 0.8);
+            color: #ffffff;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(59, 130, 246, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Newsletter Section Styles */
+        .newsletter {
+            padding: 120px 0;
+            position: relative;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.5), rgba(30, 41, 59, 0.3));
+            backdrop-filter: blur(10px);
+        }
+
+        .newsletter-hero {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .newsletter-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(220, 38, 38, 0.2));
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #F59E0B;
+            margin-bottom: 24px;
+        }
+
+        .newsletter-hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #F59E0B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .newsletter-hero-subtitle {
+            font-size: 1.25rem;
+            color: #94A3B8;
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        .newsletter-signup {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            margin: 0 auto 80px;
+            text-align: center;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 16px 24px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .newsletter-input::placeholder {
+            color: #64748B;
+        }
+
+        .newsletter-submit {
+            background: linear-gradient(135deg, #F59E0B, #DC2626);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .newsletter-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        .newsletter-current {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.7));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 24px;
+            padding: 48px;
+            margin-bottom: 60px;
+        }
+
+        .newsletter-header {
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+        }
+
+        .newsletter-date {
+            color: #F59E0B;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .newsletter-issue-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .newsletter-issue-subtitle {
+            color: #94A3B8;
+            font-size: 1.1rem;
+        }
+
+        .newsletter-content {
+            color: #E5E7EB;
+            line-height: 1.8;
+        }
+
+        .newsletter-section {
+            margin-bottom: 40px;
+        }
+
+        .newsletter-section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .critical-icon {
+            background: rgba(220, 38, 38, 0.2);
+            color: #DC2626;
+        }
+
+        .regulatory-icon {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3B82F6;
+        }
+
+        .operations-icon {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10B981;
+        }
+
+        .cost-icon {
+            background: rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+        }
+
+        .horizon-icon {
+            background: rgba(139, 92, 246, 0.2);
+            color: #8B5CF6;
+        }
+
+        .newsletter-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .newsletter-list li {
+            padding: 12px 0;
+            padding-left: 32px;
+            position: relative;
+            color: #CBD5E1;
+            line-height: 1.6;
+        }
+
+        .newsletter-list li:before {
+            content: "→";
+            position: absolute;
+            left: 8px;
+            color: #3B82F6;
+            font-weight: 600;
+        }
+
+        .newsletter-footer {
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .newsletter-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .newsletter-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .download-pdf {
+            background: rgba(59, 130, 246, 0.2);
+            color: #3B82F6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        .download-pdf:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .share-newsletter {
+            background: rgba(245, 158, 11, 0.2);
+            color: #F59E0B;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .share-newsletter:hover {
+            background: rgba(245, 158, 11, 0.3);
+        }
+
+        .newsletter-archive {
+            margin-top: 60px;
+        }
+
+        .archive-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .archive-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .archive-subtitle {
+            color: #94A3B8;
+        }
+
+        .archive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 32px;
+        }
+
+        .archive-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            padding: 32px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .archive-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        .archive-date {
+            color: #F59E0B;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .archive-title-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+        }
+
+        .archive-preview {
+            color: #94A3B8;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* About Section */
+        .about {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(245, 158, 11, 0.2));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #3B82F6;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #ffffff 0%, #94A3B8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 1.25rem;
+            color: #94A3B8;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 80px;
+        }
+
+        /* STATIC Stat Cards - NO ANIMATIONS */
+        .stat-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3B82F6, #F59E0B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .stat-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .stat-desc {
+            color: #94A3B8;
+            font-size: 0.95rem;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 0;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.5), rgba(30, 41, 59, 0.3));
+            backdrop-filter: blur(10px);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 80px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.7));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 24px;
+            padding: 48px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #ffffff;
+        }
+
+        .feature-desc {
+            color: #94A3B8;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 120px 0;
+        }
+
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin: 80px 0;
+        }
+
+        .team-card {
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.6));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+
+        .team-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .team-role {
+            color: #3B82F6;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .team-email {
+            color: #94A3B8;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .team-email:hover {
+            color: #3B82F6;
+        }
+
+        /* STATIC CTA Section - NO ANIMATIONS */
+        .cta-section {
+            background: linear-gradient(135deg, #1E40AF, #3B82F6);
+            border-radius: 24px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(30, 64, 175, 0.3);
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            color: #ffffff;
+        }
+
+        .cta-text {
+            font-size: 1.25rem;
+            margin-bottom: 32px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .cta-button {
+            background: rgba(255, 255, 255, 0.95);
+            color: #1E40AF;
+            font-weight: 700;
+            padding: 18px 36px;
+            font-size: 1.125rem;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .cta-button:hover {
+            background: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .cta-subtext {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 0;
+            border-top: 1px solid rgba(59, 130, 246, 0.2);
+            text-align: center;
+        }
+
+        .footer-text {
+            color: #64748B;
+            font-size: 0.95rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 60px;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .cta-title {
+                font-size: 2rem;
+            }
+
+            .newsletter-footer {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .hero {
+                padding: 100px 0 60px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .newsletter-current {
+                padding: 24px;
+            }
+
+            .archive-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-overlay"></div>
+    
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-logo">Akil Health</div>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Solutions</a></li>
+                    <li class="newsletter-link"><a href="#intelligence">Intelligence</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        AI-Native Healthcare Solutions
+                    </div>
+                    
+                    <h1 class="hero-title">
+                        Intelligence That Opens Doors to Care
+                    </h1>
+                    
+                    <p class="hero-subtitle">
+                        Healthcare operations experts building AI to eliminate administrative barriers that prevent patients from accessing timely, quality care.
+                    </p>
+                    
+                    <div class="btn-group">
+                        <a href="#features" class="btn btn-primary">
+                            Discover Our Solutions →
+                        </a>
+                        <a href="#intelligence" class="btn btn-secondary">
+                            Weekly Intelligence Brief
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="tech-visual">
+                        <div class="dashboard-mockup">
+                            <div class="dashboard-header">
+                                <div class="dashboard-title" style="font-family: 'Times New Roman', serif; font-weight: 400; color: #1E40AF;">Akil Operations AI</div>
+                                <div class="status-indicator">
+                                    <div class="status-dot"></div>
+                                    All Systems Active
+                                </div>
+                            </div>
+                            
+                            <div class="metrics-grid">
+                                <div class="metric-card">
+                                    <div class="metric-value">94%</div>
+                                    <div class="metric-label">Appointment Success</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">2.3s</div>
+                                    <div class="metric-label">Avg Verification Time</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">5</div>
+                                    <div class="metric-label">EHR Systems Connected</div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-value">99.9%</div>
+                                    <div class="metric-label">System Uptime</div>
+                                </div>
+                            </div>
+                            
+                            <div class="activity-feed">
+                                <div class="activity-title">Real-time Activity</div>
+                                <div class="activity-item">
+                                    <div class="activity-icon"></div>
+                                    Insurance verified for Patient #2847
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon"></div>
+                                    Epic integration: 150 records processed
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon"></div>
+                                    AI model: Barrier prediction complete
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon"></div>
+                                    Cerner sync: 89 appointments updated
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section id="intelligence" class="newsletter">
+        <div class="container">
+            <div class="newsletter-hero">
+                <div class="newsletter-hero-badge">
+                    🔥 Weekly Healthcare Intelligence
+                </div>
+                <h2 class="newsletter-hero-title">Akil Intelligence Brief</h2>
+                <p class="newsletter-hero-subtitle">
+                    Critical regulatory updates, operational insights, and cost impact analysis delivered every Monday. 
+                    Stay ahead of Medicare changes, prior authorization updates, and compliance requirements.
+                </p>
+            </div>
+
+            <div class="newsletter-signup">
+                <h3 style="font-size: 1.5rem; margin-bottom: 12px; color: white;">Get Weekly Intelligence</h3>
+                <p style="color: #94A3B8; margin-bottom: 24px;">Join healthcare executives receiving actionable regulatory intelligence.</p>
+                <form class="newsletter-form" action="#" method="post">
+                    <input type="email" class="newsletter-input" placeholder="your@email.com" required>
+                    <button type="submit" class="newsletter-submit">Subscribe Free</button>
+                </form>
+                <p style="color: #64748B; font-size: 0.85rem; margin-top: 16px;">No spam. Unsubscribe anytime.</p>
+            </div>
+
+            <!-- Current Newsletter -->
+            <div class="newsletter-current">
+                <div class="newsletter-header">
+                    <div class="newsletter-date">WEEK OF SEPTEMBER 15, 2025</div>
+                    <h3 class="newsletter-issue-title">This Week in Healthcare Operations</h3>
+                    <p class="newsletter-issue-subtitle">Your 5-minute brief on regulatory changes, compliance deadlines, and operational impacts</p>
+                </div>
+
+                <div class="newsletter-content">
+                    <!-- Sample newsletter content - this will be replaced weekly -->
+                    <div class="newsletter-section">
+                        <h4 class="newsletter-section-title">
+                            <span class="section-icon critical-icon">🔴</span>
+                            Critical Actions This Week
+                        </h4>
+                        <ul class="newsletter-list">
+                            <li><strong>September 16 Deadline:</strong> Submit comments on 2026 Medicare Advantage payment methodology</li>
+                            <li><strong>Immediate Action:</strong> Review prior authorization processes for January 1, 2026 changes</li>
+                            <li><strong>Compliance Alert:</strong> Update fraud detection protocols following $14.6B DOJ enforcement action</li>
+                        </ul>
+                    </div>
+
+                    <div class="newsletter-section">
+                        <h4 class="newsletter-section-title">
+                            <span class="section-icon regulatory-icon">📋</span>
+                            Regulatory Updates
+                        </h4>
+                        <ul class="newsletter-list">
+                            <li><strong>CMS Final Rule:</strong> 2025 Physician Fee Schedule conversion factor set at 32.3465 (0.02% adjustment)</li>
+                            <li><strong>Prior Authorization Revolution:</strong> Major insurers commit to real-time approvals by 2027, continuity during plan changes by 2026</li>
+                            <li><strong>Traditional Medicare:</strong> Prior auth pilot launching in 6 states (NJ, OH, OK, TX, AZ, WA) on January 1, 2026</li>
+                        </ul>
+                    </div>
+
+                    <div class="newsletter-section">
+                        <h4 class="newsletter-section-title">
+                            <span class="section-icon operations-icon">💡</span>
+                            Operational Intelligence
+                        </h4>
+                        <ul class="newsletter-list">
+                            <li><strong>Workforce Crisis:</strong> 100,000 healthcare worker shortage projected by 2028, acute in NY/NJ</li>
+                            <li><strong>AI Adoption:</strong> 66% of physicians now using AI, documentation time reduced by 26%</li>
+                            <li><strong>Public Health:</strong> 222 measles cases reported, first US death in a decade; flu cases at 15-year high</li>
+                        </ul>
+                    </div>
+
+                    <div class="newsletter-section">
+                        <h4 class="newsletter-section-title">
+                            <span class="section-icon cost-icon">💰</span>
+                            Cost Impact Analysis
+                        </h4>
+                        <ul class="newsletter-list">
+                            <li><strong>Opportunity:</strong> Medicare Advantage payments increasing 3.70% ($16B) for 2025</li>
+                            <li><strong>Risk Mitigation:</strong> $245M in assets seized in fraud enforcement - review compliance programs</li>
+                            <li><strong>Patient Savings:</strong> Part D out-of-pocket cap at $2,000 starting 2025</li>
+                        </ul>
+                    </div>
+
+                    <div class="newsletter-section">
+                        <h4 class="newsletter-section-title">
+                            <span class="section-icon horizon-icon">📅</span>
+                            30-Day Horizon
+                        </h4>
+                        <ul class="newsletter-list">
+                            <li><strong>October 1:</strong> FY 2025 IPPS rates take effect</li>
+                            <li><strong>October 15:</strong> Medicare Advantage open enrollment preparation</li>
+                            <li><strong>November 1:</strong> 2026 QHP certification requirements deadline</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="newsletter-footer">
+                    <div style="color: #64748B; font-size: 0.9rem;">
+                        Powered by Akil Intelligence | www.akilhealth.com
+                    </div>
+                    <div class="newsletter-actions">
+                        <a href="/newsletters/akil-intelligence-brief-2025-09-15.pdf" class="newsletter-btn download-pdf" download>📄 Download PDF</a>
+                        <a href="mailto:?subject=Akil%20Intelligence%20Brief%20-%20Healthcare%20Operations%20Update&body=Check%20out%20this%20week's%20healthcare%20operations%20intelligence%20brief%20from%20Akil%20Health:%20https://www.akilhealth.com/%23intelligence" class="newsletter-btn share-newsletter">📤 Share Brief</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Newsletter Archive -->
+            <div class="newsletter-archive">
+                <div class="archive-header">
+                    <h3 class="archive-title">Intelligence Archive</h3>
+                    <p class="archive-subtitle">Access previous weekly briefs and analysis</p>
+                </div>
+                
+                <div class="archive-grid">
+                    <!-- Archive items will be added here as newsletters are published -->
+                    <div class="archive-card">
+                        <div class="archive-date">COMING SOON</div>
+                        <h4 class="archive-title-text">Building Your Intelligence Library</h4>
+                        <p class="archive-preview">Weekly archives will appear here as we publish new Intelligence Briefs. Each issue contains critical regulatory updates, operational insights, and compliance guidance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Our Story</div>
+                <h2 class="section-title">Why "Akil" Health?</h2>
+                <p class="section-subtitle">
+                    "Akil" means "intelligent" - reflecting our AI-native approach to healthcare challenges. We build artificial intelligence into every aspect of our platform, creating solutions that learn, adapt, and improve patient access to care.
+                </p>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">Enterprise</div>
+                    <h3 class="stat-title">Mission-Critical Systems</h3>
+                    <p class="stat-desc">Architecting large-scale, real-time systems for 300,000+ global professionals in highly regulated environments</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">Compliance</div>
+                    <h3 class="stat-title">Regulatory Expertise</h3>
+                    <p class="stat-desc">Building unified global data models and compliance frameworks for mission-critical financial technology</p>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-number">Healthcare</div>
+                    <h3 class="stat-title">Operations Expertise</h3>
+                    <p class="stat-desc">Direct experience bridging business requirements with technical execution in healthcare operations</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <div class="section-badge">Our Solutions</div>
+                <h2 class="section-title">Removing Barriers, Not Just Building Tech</h2>
+                <p class="section-subtitle">
+                    We solve the administrative friction that prevents patients from accessing care—insurance verification delays, appointment coordination failures, and communication gaps that disproportionately affect underserved communities.
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3 class="feature-title">Enterprise-Scale Architecture</h3>
+                    <p class="feature-desc">
+                        Built on proven large-scale, real-time systems architecture with unified global data models. Our platform handles mission-critical healthcare operations with the same reliability as financial technology systems.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3 class="feature-title">Regulatory-First Design</h3>
+                    <p class="feature-desc">
+                        Compliance frameworks built from experience in highly regulated environments. HIPAA, SOC 2, and healthcare interoperability standards are embedded in our architecture from day one.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3 class="feature-title">AI-Powered Universal Integration</h3>
+                    <p class="feature-desc">
+                        Seamless connectivity with Epic, Cerner, athenahealth, eClinicalWorks, NextGen through AI-enhanced data engineering that bridges business requirements with technical execution.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3 class="feature-title">Blockchain-Enhanced Security</h3>
+                    <p class="feature-desc">
+                        Next-generation data integrity and interoperability using distributed ledger technology. Immutable audit trails, verifiable credentials, and secure multi-party data sharing that meets emerging regulatory frameworks.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="contact-content">
+                <div class="section-header">
+                    <div class="section-badge">Our Leadership</div>
+                    <h2 class="section-title">Enterprise Architecture Meets Healthcare Innovation</h2>
+                    <p class="section-subtitle">
+                        Combining large-scale systems architecture, regulatory compliance expertise, and AI-native development with deep healthcare operations knowledge to solve complex administrative challenges.
+                    </p>
+                </div>
+                
+                <div class="team-grid">
+                    <div class="team-card">
+                        <h4 class="team-name">Jie Whoon Kang</h4>
+                        <p class="team-role">CEO & Co-Founder</p>
+                        <p style="color: #94A3B8; font-size: 0.9rem; margin-bottom: 8px;">Healthcare Operations • Business Strategy</p>
+                        <a href="mailto:jie@akilventures.com" class="team-email">jie@akilventures.com</a>
+                    </div>
+                    
+                    <div class="team-card">
+                        <h4 class="team-name">Sinan Asa</h4>
+                        <p class="team-role">CTO & Co-Founder</p>
+                        <p style="color: #94A3B8; font-size: 0.9rem; margin-bottom: 8px;">Enterprise Architecture • AI Engineering</p>
+                        <a href="mailto:sinan@akilventures.com" class="team-email">sinan@akilventures.com</a>
+                    </div>
+                </div>
+                
+                <div class="cta-section">
+                    <h3 class="cta-title">Partner With Us</h3>
+                    <p class="cta-text">
+                        Ready to remove healthcare barriers in your community? Let's discuss how intelligent automation can improve patient access and operational efficiency.
+                    </p>
+                    <a href="mailto:hello@akilventures.com" class="btn cta-button">
+                        hello@akilventures.com
+                    </a>
+                    <p class="cta-subtext">
+                        Focused on safety net hospitals and community health centers
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="footer-text">© 2025 Akil Health. Building AI solutions to remove healthcare barriers and improve access to quality care.</p>
+        </div>
+    </footer>
+</body>
+</html>
