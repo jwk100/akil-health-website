@@ -1065,8 +1065,11 @@
             <div class="newsletter-signup">
                 <h3 style="font-size: 1.5rem; margin-bottom: 12px; color: white;">Get Weekly Intelligence</h3>
                 <p style="color: #94A3B8; margin-bottom: 24px;">Join healthcare executives receiving actionable regulatory intelligence.</p>
-                <form class="newsletter-form" action="#" method="post">
-                    <input type="email" class="newsletter-input" placeholder="your@email.com" required>
+                <form class="newsletter-form" action="https://api.web3forms.com/submit" method="POST">
+                    <input type="hidden" name="access_key" value="2e092a1a-8529-4df0-83e3-14c561deccd9">
+                    <input type="hidden" name="subject" value="New Newsletter Subscription - Akil Intelligence Brief">
+                    <input type="hidden" name="from_name" value="Akil Health Website">
+                    <input type="email" name="email" class="newsletter-input" placeholder="your@email.com" required>
                     <button type="submit" class="newsletter-submit">Subscribe Free</button>
                 </form>
                 <p style="color: #64748B; font-size: 0.85rem; margin-top: 16px;">No spam. Unsubscribe anytime.</p>
