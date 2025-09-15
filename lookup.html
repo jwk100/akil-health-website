@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+    Enhanced Elmhurst Ambulatory Care Staff Lookup Tool
+    Created by JWK for EL PC
+    Complete version with MDs, NPs, languages, and covering relationships
+    Last updated: 7/1/25
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Elmhurst Ambulatory Care Lookup</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useMemo } = React;
+
+        // Icon components
+        const Search = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="21 21L16.514 16.506"></path>
+            </svg>
+        );
+
+        const Users = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+        );
+
+        const UserCheck = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <polyline points="17,11 19,13 23,9"></polyline>
+            </svg>
+        );
+
+        const AlertCircle = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        );
+
+        const Globe = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+        );
+
+        const Filter = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"></polygon>
+            </svg>
+        );
+
+        const Shield = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+        );
+
+        const StaffLookup = () => {
+            const [searchTerm, setSearchTerm] = useState('');
+            const [roleFilter, setRoleFilter] = useState('All');
+            const [teamFilter, setTeamFilter] = useState('All');
+            const [languageFilter, setLanguageFilter] = useState('All');
+            const [showFilters, setShowFilters] = useState(false);
+
+            // Complete staff data from MCP
+            const allStaff = [
+                // Team A - Attendings
+                { id: "A001", name: "Brewer, Marlon", role: "Attending", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: "Saito-Schachner, Ana", supervisor: null },
+                { id: "A002", name: "Saito-Schachner, Ana", role: "Attending", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: "Brewer, Marlon", supervisor: null },
+                { id: "A003", name: "Reich, Lawrence", role: "Attending", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: "Chowdhury, Mita", supervisor: null },
+                { id: "A004", name: "Chowdhury, Mita", role: "Attending", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: "Reich, Lawrence", supervisor: null },
+                { id: "A005", name: "Patel, Asvinkumar", role: "Attending", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: "Sachdeva, Anita", supervisor: null },
+                { id: "A006", name: "Sachdeva, Anita", role: "Attending", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: "Patel, Asvinkumar", supervisor: null },
+                { id: "A007", name: "Rao, Anuj", role: "Attending", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: "Alkhairw, Hadeel", supervisor: null },
+                { id: "A008", name: "Alkhairw, Hadeel", role: "Attending", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: "Rao, Anuj", supervisor: null },
+
+                // Team A - Residents
+                { id: "A101", name: "Adhikari, Bibhuti", role: "Resident (PGY-3)", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: null, supervisor: "Brewer, Marlon" },
+                { id: "A102", name: "Aguilar, Reyna", role: "Resident (PGY-2)", type: "MD", team: "A", languages: ["Spanish", "Spanish Creole"], specialty: null, covers_for: null, supervisor: "Brewer, Marlon" },
+                { id: "A103", name: "Butt, Sibghatallah", role: "Resident (PGY-3)", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: null, supervisor: "Saito-Schachner, Ana" },
+                { id: "A104", name: "Basantes, Jair", role: "Resident (PGY-1)", type: "MD", team: "A", languages: ["Spanish", "Spanish Creole"], specialty: null, covers_for: null, supervisor: "Saito-Schachner, Ana" },
+                { id: "A105", name: "Agrawal, Surbhi", role: "Resident (PGY-1)", type: "MD", team: "A", languages: ["Hindi"], specialty: null, covers_for: null, supervisor: "Saito-Schachner, Ana" },
+                { id: "A106", name: "Amarasinghe, Chaveen", role: "Resident (PGY-3)", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: null, supervisor: "Reich, Lawrence" },
+                { id: "A107", name: "Naik, Anagha", role: "Resident (PGY-1)", type: "MD", team: "A", languages: ["Hindi", "Malayalam", "Tamil", "Konkani"], specialty: null, covers_for: null, supervisor: "Reich, Lawrence" },
+                { id: "A108", name: "Aboukhatwa, Omar", role: "Resident (PGY-1)", type: "MD", team: "A", languages: ["Arabic"], specialty: null, covers_for: null, supervisor: "Reich, Lawrence" },
+                { id: "A109", name: "Bassiony, Mohamed", role: "Resident (PGY-2)", type: "MD", team: "A", languages: ["Arabic"], specialty: null, covers_for: null, supervisor: "Chowdhury, Mita" },
+                { id: "A110", name: "Baur, Ariela", role: "Resident (PGY-3)", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: null, supervisor: "Chowdhury, Mita" },
+                { id: "A111", name: "Margalioth, Jonathan", role: "Resident (PGY-1)", type: "MD", team: "A", languages: ["Hebrew", "Italian"], specialty: null, covers_for: null, supervisor: "Chowdhury, Mita" },
+                { id: "A112", name: "Burgos Guntin, Eusebio", role: "Resident (PGY-2)", type: "MD", team: "A", languages: ["Spanish", "Spanish Creole"], specialty: null, covers_for: null, supervisor: "Patel, Asvinkumar" },
+                { id: "A113", name: "Carpenter, Colin", role: "Resident (PGY-2)", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: null, supervisor: "Sachdeva, Anita" },
+                { id: "A114", name: "Raman, Shakthi", role: "Resident (PGY-1)", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: null, supervisor: "Rao, Anuj" },
+                { id: "A115", name: "Gami, Nihar", role: "Resident (PGY-1)", type: "MD", team: "A", languages: ["English"], specialty: null, covers_for: null, supervisor: "Alkhairw, Hadeel" },
+
+                // Team A - NPs
+                { id: "A201", name: "Tenzin Zompa", role: "Nurse Practitioner", type: "NP", team: "A", languages: ["English"], specialty: null, covers_for: "Ekwutos (Pauline) Nweze", supervisor: null },
+                { id: "A202", name: "Ekwutos (Pauline) Nweze", role: "Nurse Practitioner", type: "NPC", team: "A", languages: ["English"], specialty: null, covers_for: "Tenzin Zompa", supervisor: null },
+                { id: "A203", name: "Caroline Budasoff", role: "Nurse Practitioner", type: "NP", team: "A", languages: ["English"], specialty: null, covers_for: "Jessica Deleon", supervisor: null },
+                { id: "A204", name: "Jessica Deleon", role: "Nurse Practitioner", type: "NP", team: "A", languages: ["English"], specialty: null, covers_for: "Caroline Budasoff", supervisor: null },
+
+                // Team B - Attendings
+                { id: "B001", name: "Yoo, Chang", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: "Angarita, Johana", supervisor: null },
+                { id: "B002", name: "Angarita, Johana", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: "Yoo, Chang", supervisor: null },
+                { id: "B003", name: "Huang, Huajun", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: "Klek, Malgorzata", supervisor: null },
+                { id: "B004", name: "Klek, Malgorzata", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: "Huang, Huajun", supervisor: null },
+                { id: "B005", name: "Oo, Mya", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: "Chowdhury, Shahinur", supervisor: null },
+                { id: "B006", name: "Chowdhury, Shahinur", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: "Oo, Mya", supervisor: null },
+                { id: "B007", name: "Ankur, Sabha", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: "SCC", covers_for: null, supervisor: null },
+                { id: "B008", name: "Veeraswamy, Pramila", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: "Rathnam, Sivagama", supervisor: null },
+                { id: "B009", name: "Goiri, Maria C.", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: null, supervisor: null },
+                { id: "B010", name: "Rathnam, Sivagama", role: "Attending", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: "Veeraswamy, Pramila", supervisor: null },
+
+                // Team B - Residents
+                { id: "B101", name: "Daudpota, Ali", role: "Resident (PGY-3)", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: null, supervisor: "Yoo, Chang" },
+                { id: "B102", name: "Bedeir, Nur", role: "Resident (PGY-1)", type: "MD", team: "B", languages: ["Arabic", "Italian", "Spanish", "Spanish Creole"], specialty: null, covers_for: null, supervisor: "Angarita, Johana" },
+                { id: "B103", name: "Feliciano, Erin Jay", role: "Resident (PGY-3)", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: null, supervisor: "Huang, Huajun" },
+                { id: "B104", name: "Ganesh, Adithan", role: "Resident (PGY-2)", type: "MD", team: "B", languages: ["Bantu", "Spanish Creole", "Tamil"], specialty: null, covers_for: null, supervisor: "Huang, Huajun" },
+                { id: "B105", name: "Javed, Haseeba", role: "Resident (PGY-1)", type: "MD", team: "B", languages: ["Hindi", "Punjabi", "Urdu"], specialty: null, covers_for: null, supervisor: "Huang, Huajun" },
+                { id: "B106", name: "Hoffman, Jan", role: "Resident (PGY-3)", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: null, supervisor: "Klek, Malgorzata" },
+                { id: "B107", name: "Gemmato Valecillos, Mario", role: "Resident (PGY-2)", type: "MD", team: "B", languages: ["Spanish", "Spanish Creole", "Italian", "French"], specialty: null, covers_for: null, supervisor: "Klek, Malgorzata" },
+                { id: "B108", name: "Johnson, Madonna", role: "Resident (PGY-1)", type: "MD", team: "B", languages: ["Malayalam"], specialty: null, covers_for: null, supervisor: "Klek, Malgorzata" },
+                { id: "B109", name: "Hugo, Hannah", role: "Resident (PGY-3)", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: null, supervisor: "Oo, Mya" },
+                { id: "B110", name: "Jeon, Jun Ki", role: "Resident (PGY-2)", type: "MD", team: "B", languages: ["Korean", "French"], specialty: null, covers_for: null, supervisor: "Oo, Mya" },
+                { id: "B111", name: "Sinan, Hassan", role: "Resident (PGY-1)", type: "MD", team: "B", languages: ["Arabic", "French"], specialty: null, covers_for: null, supervisor: "Oo, Mya" },
+                { id: "B112", name: "Hum, Avery", role: "Resident (PGY-3)", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: null, supervisor: "Chowdhury, Shahinur" },
+                { id: "B113", name: "Liu, Franklin", role: "Resident (PGY-2)", type: "MD", team: "B", languages: ["Chinese"], specialty: null, covers_for: null, supervisor: "Chowdhury, Shahinur" },
+                { id: "B114", name: "Bampatsias, Dimitrios", role: "Resident (PGY-1)", type: "MD", team: "B", languages: ["Greek", "German"], specialty: null, covers_for: null, supervisor: "Chowdhury, Shahinur" },
+                { id: "B115", name: "Kim, Woo Suk", role: "Resident (PGY-3)", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: null, supervisor: "Ankur, Sabha" },
+                { id: "B116", name: "Vieira de Oliveira Salerno, Pedro Rafael", role: "Resident (PGY-2)", type: "MD", team: "B", languages: ["Portuguese", "Spanish", "Spanish Creole", "German"], specialty: null, covers_for: null, supervisor: "Ankur, Sabha" },
+                { id: "B117", name: "Li, Shengming", role: "Resident (PGY-1)", type: "MD", team: "B", languages: ["Chinese"], specialty: null, covers_for: null, supervisor: "Ankur, Sabha" },
+                { id: "B118", name: "Mc Daid, Alexander", role: "Resident (PGY-2)", type: "MD", team: "B", languages: ["French"], specialty: null, covers_for: null, supervisor: "Veeraswamy, Pramila" },
+                { id: "B119", name: "Mexia Cabrales, Jazmin", role: "Resident (PGY-2)", type: "MD", team: "B", languages: ["Spanish", "Spanish Creole", "Korean"], specialty: null, covers_for: null, supervisor: "Veeraswamy, Pramila" },
+                { id: "B120", name: "Aragundi Palacios, Eduardo", role: "Resident (PGY-1)", type: "MD", team: "B", languages: ["German", "Portuguese", "Spanish"], specialty: null, covers_for: null, supervisor: "Veeraswamy, Pramila" },
+                { id: "B121", name: "Camere Pastor, Maurizio", role: "Resident (PGY-3)", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: null, supervisor: "Goiri, Maria C." },
+                { id: "B122", name: "Oikeh, Oikigbeme", role: "Resident (PGY-2)", type: "MD", team: "B", languages: ["French"], specialty: null, covers_for: null, supervisor: "Goiri, Maria C." },
+                { id: "B123", name: "Calix Flores, Madelin", role: "Resident (PGY-1)", type: "MD", team: "B", languages: ["Spanish", "Spanish Creole"], specialty: null, covers_for: null, supervisor: "Goiri, Maria C." },
+                { id: "B124", name: "Jeong, Yujin", role: "Resident (PGY-3)", type: "MD", team: "B", languages: ["English"], specialty: null, covers_for: null, supervisor: "Rathnam, Sivagama" },
+                { id: "B125", name: "Quintana Ruiz, Juan Luis", role: "Resident (PGY-2)", type: "MD", team: "B", languages: ["Spanish", "Spanish Creole", "Portuguese", "French"], specialty: null, covers_for: null, supervisor: "Rathnam, Sivagama" },
+                { id: "B126", name: "Chabashvili, Anano", role: "Resident (PGY-1)", type: "MD", team: "B", languages: ["Russian"], specialty: null, covers_for: null, supervisor: "Rathnam, Sivagama" },
+
+                // Team B - NPs
+                { id: "B201", name: "Chil Sook Kwon", role: "Nurse Practitioner", type: "NP", team: "B", languages: ["English"], specialty: null, covers_for: "Sandra Jimenez", supervisor: null },
+                { id: "B202", name: "Sandra Jimenez", role: "Nurse Practitioner", type: "NP", team: "B", languages: ["English"], specialty: null, covers_for: "Chil Sook Kwon", supervisor: null },
+
+                // Team C - Attendings
+                { id: "C001", name: "Ast, Denise", role: "Attending", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: "Gordon, Lucy", supervisor: null },
+                { id: "C002", name: "Gordon, Lucy", role: "Attending", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: "Ast, Denise", supervisor: null },
+                { id: "C003", name: "Khan, Zeb", role: "Attending", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: "Deb Roy, Padmaja", supervisor: null },
+                { id: "C004", name: "Deb Roy, Padmaja", role: "Attending", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: "Khan, Zeb", supervisor: null },
+                { id: "C005", name: "Zaman, Selina", role: "Attending", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: "Alonso, Samantha", supervisor: null },
+                { id: "C006", name: "Alonso, Samantha", role: "Attending", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: "Zaman, Selina", supervisor: null },
+
+                // Team C - Residents
+                { id: "C101", name: "Mace de Lepinay, Beatrice", role: "Resident (PGY-1)", type: "MD", team: "C", languages: ["French", "Hebrew", "Italian", "Spanish"], specialty: null, covers_for: null, supervisor: "Ast, Denise" },
+                { id: "C102", name: "Rathnam, Aparna", role: "Resident (PGY-3)", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: null, supervisor: "Gordon, Lucy" },
+                { id: "C103", name: "Raval, Darshan", role: "Resident (PGY-2)", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: null, supervisor: "Gordon, Lucy" },
+                { id: "C104", name: "Estrada Mendizabal, Ricardo", role: "Resident (PGY-1)", type: "MD", team: "C", languages: ["Spanish", "Spanish Creole"], specialty: null, covers_for: null, supervisor: "Gordon, Lucy" },
+                { id: "C105", name: "Kooienga, Peter", role: "Resident (PGY-3)", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: null, supervisor: "Khan, Zeb" },
+                { id: "C106", name: "Marmolejo, Diana", role: "Resident (PGY-2)", type: "MD", team: "C", languages: ["Spanish", "Spanish Creole"], specialty: null, covers_for: null, supervisor: "Khan, Zeb" },
+                { id: "C107", name: "Lo, Samantha", role: "Resident (PGY-3)", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: null, supervisor: "Deb Roy, Padmaja" },
+                { id: "C108", name: "Prakash, Tanuja", role: "Resident (PGY-3)", type: "MD", team: "C", languages: ["English"], specialty: null, covers_for: null, supervisor: "Zaman, Selina" },
+                { id: "C109", name: "Al Jariri, Abdelmajid", role: "Resident (PGY-1)", type: "MD", team: "C", languages: ["Arabic"], specialty: null, covers_for: null, supervisor: "Alonso, Samantha" },
+
+                // Team C - NPs
+                { id: "C201", name: "Melissa Chu", role: "Nurse Practitioner", type: "NP", team: "C", languages: ["English"], specialty: null, covers_for: "Smita Datta", supervisor: null },
+                { id: "C202", name: "Smita Datta", role: "Nurse Practitioner", type: "NP", team: "C", languages: ["English"], specialty: null, covers_for: "Melissa Chu", supervisor: null },
+                { id: "C203", name: "Elizabeth Adeleye", role: "Nurse Practitioner", type: "NP", team: "C", languages: ["English"], specialty: null, covers_for: "Olga Badalova", supervisor: null },
+                { id: "C204", name: "Olga Badalova", role: "Nurse Practitioner", type: "NP", team: "C", languages: ["English"], specialty: null, covers_for: "Elizabeth Adeleye", supervisor: null },
+
+                // Team D - Attendings
+                { id: "D001", name: "Toueg, Sam", role: "Attending", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: "Syedain, Qurat", supervisor: null },
+                { id: "D002", name: "Syedain, Qurat", role: "Attending", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: "Toueg, Sam", supervisor: null },
+                { id: "D003", name: "Ma, Ohm", role: "Attending", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: "Sawlani, Deepak", supervisor: null },
+                { id: "D004", name: "Sawlani, Deepak", role: "Attending", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: "Ma, Ohm", supervisor: null },
+                { id: "D005", name: "Santra, Mugdha", role: "Attending", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: "Kothandaram, Roshan", supervisor: null },
+                { id: "D006", name: "Kothandaram, Roshan", role: "Attending", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: "Santra, Mugdha", supervisor: null },
+
+                // Team D - Residents
+                { id: "D101", name: "Santiago Perez, Javier", role: "Resident (PGY-3)", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: null, supervisor: "Toueg, Sam" },
+                { id: "D102", name: "Ribas, Eduardo", role: "Resident (PGY-2)", type: "MD", team: "D", languages: ["Portuguese", "Spanish", "Spanish Creole", "Italian"], specialty: null, covers_for: null, supervisor: "Toueg, Sam" },
+                { id: "D103", name: "Sidhu, Harleen", role: "Resident (PGY-3)", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: null, supervisor: "Syedain, Qurat" },
+                { id: "D104", name: "Samaha, Youssef", role: "Resident (PGY-2)", type: "MD", team: "D", languages: ["Arabic", "French"], specialty: null, covers_for: null, supervisor: "Syedain, Qurat" },
+                { id: "D105", name: "Tenorio, Bettina Gabrielle", role: "Resident (PGY-2)", type: "MD", team: "D", languages: ["Tagalog"], specialty: null, covers_for: null, supervisor: "Syedain, Qurat" },
+                { id: "D106", name: "Al Dakar, Leonel", role: "Resident (PGY-1)", type: "MD", team: "D", languages: ["Arabic"], specialty: null, covers_for: null, supervisor: "Ma, Ohm" },
+                { id: "D107", name: "Sivalingam, Thanushiree", role: "Resident (PGY-3)", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: null, supervisor: "Sawlani, Deepak" },
+                { id: "D108", name: "Thomas, Bobby", role: "Resident (PGY-3)", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: null, supervisor: "Santra, Mugdha" },
+                { id: "D109", name: "Tran, Diane", role: "Resident (PGY-2)", type: "MD", team: "D", languages: ["English"], specialty: null, covers_for: null, supervisor: "Santra, Mugdha" },
+                { id: "D110", name: "Shafiq, Fatima", role: "Resident (PGY-1)", type: "MD", team: "D", languages: ["Hindi", "Punjabi", "Urdu"], specialty: null, covers_for: null, supervisor: "Santra, Mugdha" },
+                { id: "D111", name: "Urraca, Juan", role: "Resident (PGY-2)", type: "MD", team: "D", languages: ["Spanish", "Spanish Creole"], specialty: null, covers_for: null, supervisor: "Kothandaram, Roshan" },
+
+                // Team D - NPs
+                { id: "D201", name: "Chin Hsein Yu-Tang", role: "Nurse Practitioner", type: "NP", team: "D", languages: ["English"], specialty: null, covers_for: "Hanna Yakubova", supervisor: null },
+                { id: "D202", name: "Hanna Yakubova", role: "Nurse Practitioner", type: "NP", team: "D", languages: ["English"], specialty: null, covers_for: "Chin Hsein Yu-Tang", supervisor: null },
+                { id: "D203", name: "Choden Tenzin", role: "Nurse Practitioner", type: "NP", team: "D", languages: ["English"], specialty: null, covers_for: "Emma Izrailova", supervisor: null },
+                { id: "D204", name: "Emma Izrailova", role: "Nurse Practitioner", type: "NP", team: "D", languages: ["English"], specialty: null, covers_for: "Choden Tenzin", supervisor: null },
+
+                // Special Care Staff
+                { id: "SC001", name: "Shavon Dillon", role: "Attending", type: "MD", team: "SPECIAL", languages: ["English"], specialty: "Senior Care", covers_for: null, supervisor: null },
+                { id: "SC002", name: "Sabha Ankur", role: "Attending", type: "MD", team: "SPECIAL", languages: ["English"], specialty: "Senior Care", covers_for: null, supervisor: null },
+                { id: "SC003", name: "Stephanie Tsambazis", role: "Nurse Practitioner", type: "NP", team: "SPECIAL", languages: ["English"], specialty: "Senior Care", covers_for: null, supervisor: null },
+                { id: "SC004", name: "Marie (Jude) Sajous", role: "Nurse Practitioner", type: "NP", team: "SPECIAL", languages: ["English"], specialty: "Senior Care", covers_for: null, supervisor: null },
+                { id: "OHS001", name: "Tu Tu Mon", role: "Attending", type: "MD", team: "SPECIAL", languages: ["English"], specialty: "OHS", covers_for: null, supervisor: null },
+                { id: "OHS002", name: "Dina Khaimova", role: "Nurse Practitioner", type: "NP", team: "SPECIAL", languages: ["English"], specialty: "OHS", covers_for: null, supervisor: null }
+            ];
+
+            // Enhanced search with multiple filters
+            const filteredStaff = useMemo(() => {
+                if (!searchTerm.trim() && roleFilter === 'All' && teamFilter === 'All' && languageFilter === 'All') {
+                    return [];
+                }
+                
+                let filtered = allStaff;
+                
+                // Text search
+                if (searchTerm.trim()) {
+                    const term = searchTerm.toLowerCase();
+                    filtered = filtered.filter(person => 
+                        person.name.toLowerCase().includes(term) ||
+                        person.role.toLowerCase().includes(term) ||
+                        person.team.toLowerCase().includes(term) ||
+                        person.type.toLowerCase().includes(term) ||
+                        (person.specialty && person.specialty.toLowerCase().includes(term)) ||
+                        (person.supervisor && person.supervisor.toLowerCase().includes(term)) ||
+                        (person.covers_for && person.covers_for.toLowerCase().includes(term)) ||
+                        person.languages.some(lang => lang.toLowerCase().includes(term))
+                    );
+                }
+                
+                // Role filter
+                if (roleFilter !== 'All') {
+                    filtered = filtered.filter(person => person.role.includes(roleFilter));
+                }
+                
+                // Team filter
+                if (teamFilter !== 'All') {
+                    filtered = filtered.filter(person => person.team === teamFilter);
+                }
+                
+                // Language filter
+                if (languageFilter !== 'All') {
+                    filtered = filtered.filter(person => 
+                        person.languages.includes(languageFilter)
+                    );
+                }
+                
+                return filtered;
+            }, [searchTerm, roleFilter, teamFilter, languageFilter]);
+
+            // Get unique values for filters
+            const uniqueLanguages = [...new Set(allStaff.flatMap(person => person.languages))].sort();
+            
+            // Statistics
+            const totalStaff = allStaff.length;
+            const teamCounts = allStaff.reduce((acc, person) => {
+                if (person.team !== 'SPECIAL') {
+                    acc[person.team] = (acc[person.team] || 0) + 1;
+                }
+                return acc;
+            }, {});
+            const specialCareCount = allStaff.filter(person => person.team === 'SPECIAL').length;
+
+            return (
+                <div className="max-w-7xl mx-auto p-6 bg-white">
+                    <div className="mb-8">
+                        <div className="flex justify-between items-start mb-2">
+                            <h1 className="text-3xl font-bold text-gray-900">
+                                Enhanced Elmhurst Ambulatory Care Lookup
+                            </h1>
+                        </div>
+                        <p className="text-gray-600">
+                            Search for doctors, residents, and nurse practitioners - now with languages and covering relationships
+                        </p>
+                        <p className="text-sm text-gray-500 mt-1">
+                            Enhanced version | Last updated: 7/1/25 | Created by JWK for EL PC | 2025-2026 Academic Year
+                        </p>
+                    </div>
+
+                    {/* Search and Filters */}
+                    <div className="mb-6 space-y-4">
+                        <div className="relative">
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                            <input
+                                type="text"
+                                placeholder="Search by name, language, team, role, or covering relationship..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+                            />
+                        </div>
+
+                        <div className="flex flex-wrap gap-3">
+                            <button
+                                onClick={() => setShowFilters(!showFilters)}
+                                className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                            >
+                                <Filter className="w-4 h-4 mr-2" />
+                                Filters
+                            </button>
+                            
+                            {showFilters && (
+                                <>
+                                    <select
+                                        value={roleFilter}
+                                        onChange={(e) => setRoleFilter(e.target.value)}
+                                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        <option value="All">All Roles</option>
+                                        <option value="Attending">Attendings</option>
+                                        <option value="Resident">Residents</option>
+                                        <option value="Nurse Practitioner">Nurse Practitioners</option>
+                                    </select>
+
+                                    <select
+                                        value={teamFilter}
+                                        onChange={(e) => setTeamFilter(e.target.value)}
+                                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        <option value="All">All Teams</option>
+                                        <option value="A">Team A</option>
+                                        <option value="B">Team B</option>
+                                        <option value="C">Team C</option>
+                                        <option value="D">Team D</option>
+                                        <option value="SPECIAL">Special Care</option>
+                                    </select>
+
+                                    <select
+                                        value={languageFilter}
+                                        onChange={(e) => setLanguageFilter(e.target.value)}
+                                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    >
+                                        <option value="All">All Languages</option>
+                                        {uniqueLanguages.map(lang => (
+                                            <option key={lang} value={lang}>{lang}</option>
+                                        ))}
+                                    </select>
+
+                                    <button
+                                        onClick={() => {
+                                            setRoleFilter('All');
+                                            setTeamFilter('All');
+                                            setLanguageFilter('All');
+                                            setSearchTerm('');
+                                        }}
+                                        className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200"
+                                    >
+                                        Clear All
+                                    </button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Statistics */}
+                    <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-6">
+                        <div className="bg-blue-50 p-4 rounded-lg text-center">
+                            <div className="text-2xl font-bold text-blue-600">{totalStaff}</div>
+                            <div className="text-sm text-blue-800">Total Staff</div>
+                        </div>
+                        {Object.entries(teamCounts).map(([team, count]) => (
+                            <div key={team} className="bg-gray-50 p-4 rounded-lg text-center">
+                                <div className="text-2xl font-bold text-gray-600">{count}</div>
+                                <div className="text-sm text-gray-800">Team {team}</div>
+                            </div>
+                        ))}
+                        <div className="bg-purple-50 p-4 rounded-lg text-center">
+                            <div className="text-2xl font-bold text-purple-600">{specialCareCount}</div>
+                            <div className="text-sm text-purple-800">Special Care</div>
+                        </div>
+                    </div>
+
+                    {/* Search Results */}
+                    {(searchTerm.trim() || roleFilter !== 'All' || teamFilter !== 'All' || languageFilter !== 'All') && (
+                        <div className="mb-6">
+                            <h2 className="text-xl font-semibold mb-4 flex items-center">
+                                <Search className="w-5 h-5 mr-2" />
+                                Search Results ({filteredStaff.length} found)
+                            </h2>
+                            
+                            {filteredStaff.length > 0 ? (
+                                <div className="grid gap-3">
+                                    {filteredStaff.map((person) => (
+                                        <div key={person.id} className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                            <div className="flex items-start justify-between">
+                                                <div className="flex-1">
+                                                    <div className="flex items-center mb-2">
+                                                        <UserCheck className="w-5 h-5 text-green-600 mr-2" />
+                                                        <div className="font-semibold text-green-800 text-lg">{person.name}</div>
+                                                        <div className="ml-auto bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                                                            ✓ Active
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <div className="grid md:grid-cols-2 gap-2 text-sm text-green-700">
+                                                        <div>
+                                                            <strong>Role:</strong> {person.role} ({person.type})
+                                                        </div>
+                                                        <div>
+                                                            <strong>Team:</strong> {person.team === 'SPECIAL' ? 'Special Care' : `Team ${person.team}`}
+                                                        </div>
+                                                        
+                                                        {person.languages.length > 0 && (
+                                                            <div className="flex items-center">
+                                                                <Globe className="w-4 h-4 mr-1" />
+                                                                <strong>Languages:</strong> {person.languages.join(', ')}
+                                                            </div>
+                                                        )}
+                                                        
+                                                        {person.specialty && (
+                                                            <div className="flex items-center">
+                                                                <Shield className="w-4 h-4 mr-1" />
+                                                                <strong>Specialty:</strong> {person.specialty}
+                                                            </div>
+                                                        )}
+                                                        
+                                                        {person.supervisor && (
+                                                            <div>
+                                                                <strong>Supervised by:</strong> {person.supervisor}
+                                                            </div>
+                                                        )}
+                                                        
+                                                        {person.covers_for && (
+                                                            <div>
+                                                                <strong>Covers for:</strong> {person.covers_for}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center">
+                                    <AlertCircle className="w-6 h-6 text-red-600 mr-3" />
+                                    <div>
+                                        <div className="font-semibold text-red-800">No results found</div>
+                                        <div className="text-sm text-red-600">
+                                            Try adjusting your search terms or filters
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Instructions */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h3 className="font-semibold text-blue-800 mb-2 flex items-center">
+                            <Users className="w-5 h-5 mr-2" />
+                            How to use this enhanced tool
+                        </h3>
+                        <ul className="text-sm text-blue-700 space-y-1">
+                            <li>• <strong>Search by name:</strong> Type any part of a person's name</li>
+                            <li>• <strong>Search by language:</strong> Type "Spanish", "Arabic", etc. to find speakers</li>
+                            <li>• <strong>Search by role:</strong> Type "attending", "resident", "NP", etc.</li>
+                            <li>• <strong>Search by covering:</strong> Type a name to see who covers for them</li>
+                            <li>• <strong>Use filters:</strong> Narrow results by role, team, or language</li>
+                            <li>• <strong>Covering relationships:</strong> Shows who provides backup coverage</li>
+                            <li>• <strong>Language capabilities:</strong> Essential for patient care coordination</li>
+                            <li>• <strong>Special care:</strong> Includes Senior Care and Occupational Health Services</li>
+                            <li>• <strong>PCP rules:</strong> Residents are General PCP with attending supervision</li>
+                        </ul>
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(React.createElement(StaffLookup), document.getElementById('root'));
+    </script>
+</body>
+</html>
